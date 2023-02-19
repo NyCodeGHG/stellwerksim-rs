@@ -1,0 +1,9 @@
+[package]
+name = "stellwerksim"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["net", "io-util"] }
+serde = { version = "1", features = ["derive"] }
+serde-xml-rs = "0.6"

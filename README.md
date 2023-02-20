@@ -7,10 +7,12 @@
 
 Rust SDK for writing asynchronous [StellwerkSim](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:schnittstelle) plugins using [tokio](https://crates.io/tokio).
 
-# Versioning
+## Versioning
 
 This crate uses [Semantic Versioning](https://semver.org/).
-Unless the crate has reached 1.0.0, breaking changes can also occur in minor releases.
+
+> **Note**
+> Unless the crate has reached 1.0.0, breaking changes can also occur in minor releases.
 
 ## License
 

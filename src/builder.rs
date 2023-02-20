@@ -44,9 +44,7 @@ impl<'a> PluginBuilder<'a> {
             version: self
                 .version
                 .unwrap_or(concat!("stellwerksim-rs/", env!("CARGO_PKG_VERSION"))),
-            description: self
-                .description
-                .unwrap_or("A stellwerksim-rs plugin"),
+            description: self.description.unwrap_or("A stellwerksim-rs plugin"),
             host: self
                 .host
                 .unwrap_or_else(|| "127.0.0.1:3691".parse().unwrap()),

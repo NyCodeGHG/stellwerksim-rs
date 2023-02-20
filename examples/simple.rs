@@ -1,6 +1,6 @@
 use stellwerksim::Plugin;
 
-#[tokio::main(flavor = "current_thread")]
+#[tokio::main()]
 async fn main() {
     let plugin = Plugin::builder()
         .name("Example Plugin")

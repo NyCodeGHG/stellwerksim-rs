@@ -1,53 +1,52 @@
 use crate::{Error, Plugin, PluginDetails};
 use std::net::SocketAddr;
 
+/// Builder for constructing a [Plugin].
 #[derive(Debug, Default)]
-pub struct PluginBuilder {
-    name: Option<String>,
-    author: Option<String>,
-    version: Option<String>,
-    description: Option<String>,
+pub struct PluginBuilder<'a> {
+    name: Option<&'a str>,
+    author: Option<&'a str>,
+    version: Option<&'a str>,
+    description: Option<&'a str>,
     host: Option<SocketAddr>,
 }
 
-impl PluginBuilder {
-    pub fn name<S: Into<String>>(mut self, name: S) -> Self {
-        self.name = Some(name.into());
+impl<'a> PluginBuilder<'a> {
+    pub fn name(mut self, name: &'a str) -> Self {
+        self.name = Some(name);
         self
     }
 
-    pub fn author<S: Into<String>>(mut self, author: S) -> Self {
-        self.author = Some(author.into());
+    pub fn author(mut self, author: &'a str) -> Self {
+        self.author = Some(author);
         self
     }
 
-    pub fn version<S: Into<String>>(mut self, version: S) -> Self {
-        self.version = Some(version.into());
+    pub fn version(mut self, version: &'a str) -> Self {
+        self.version = Some(version);
         self
     }
 
-    pub fn description<S: Into<String>>(mut self, description: S) -> Self {
-        self.description = Some(description.into());
+    pub fn description(mut self, description: &'a str) -> Self {
+        self.description = Some(description);
         self
     }
 
-    pub fn host<S: Into<SocketAddr>>(mut self, host: S) -> Self {
-        self.host = Some(host.into());
+    pub fn host(mut self, host: SocketAddr) -> Self {
+        self.host = Some(host);
         self
     }
 
     pub async fn connect(self) -> Result<Plugin, Error> {
         Plugin::connect(PluginDetails {
-            name: self.name.unwrap_or_else(|| "stellwerksim-rs Plugin".into()),
-            author: self
-                .author
-                .unwrap_or_else(|| "stellwerksim-rs Author".into()),
+            name: self.name.unwrap_or_else(|| "stellwerksim-rs Plugin"),
+            author: self.author.unwrap_or_else(|| "stellwerksim-rs Author"),
             version: self
                 .version
-                .unwrap_or_else(|| env!("CARGO_PKG_VERSION").into()),
+                .unwrap_or_else(|| concat!("stellwerksim-rs/", env!("CARGO_PKG_VERSION"))),
             description: self
                 .description
-                .unwrap_or_else(|| "A stellwerksim-rs plugin".into()),
+                .unwrap_or_else(|| "A stellwerksim-rs plugin"),
             host: self
                 .host
                 .unwrap_or_else(|| "127.0.0.1:3691".parse().unwrap()),

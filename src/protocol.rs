@@ -1,7 +1,7 @@
 #[cfg(feature = "simulator-time")]
-use chrono::NaiveDateTime;
-use chrono::NaiveTime;
+use chrono::{NaiveDateTime, NaiveTime};
 use serde::Deserialize;
+#[cfg(feature = "simulator-time")]
 use serde_with::{formats::Strict, serde_as, DeserializeAs, TimestampMilliSeconds};
 
 #[derive(Debug, Deserialize)]
@@ -14,14 +14,16 @@ pub struct Status {
 #[cfg(feature = "simulator-time")]
 #[serde_as]
 #[derive(Debug, Deserialize)]
-pub struct SimulatorTime {
+pub(crate) struct SimulatorTimeResponse {
     #[serde_as(as = "NaiveTimeMilliSeconds")]
     #[serde(rename = "zeit")]
     pub time: NaiveTime,
 }
 
+#[cfg(feature = "simulator-time")]
 struct NaiveTimeMilliSeconds;
 
+#[cfg(feature = "simulator-time")]
 impl<'de> DeserializeAs<'de, NaiveTime> for NaiveTimeMilliSeconds {
     fn deserialize_as<D>(deserializer: D) -> Result<NaiveTime, D::Error>
     where

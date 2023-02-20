@@ -2,6 +2,12 @@
 name = "stellwerksim"
 version = "0.1.0"
 edition = "2021"
+description = "Rust SDK for StellwerkSim."
+authors = ["Marie Ramlow <me@nycode.dev>"]
+readme = "./README.md"
+license = "MIT OR Apache-2.0"
+keywords = ["stellwerksim"]
+repository = "https://github.com/NyCodeGHG/stellwerksim-rs"
 
 [features]
 default = ["simulator-time"]
@@ -11,8 +17,12 @@ simulator-time = ["dep:chrono", "dep:serde_with"]
 tokio = { version = "1", features = ["net", "io-util", "sync"] }
 serde = { version = "1", features = ["derive"] }
 serde-xml-rs = "0.6"
+thiserror = "1"
 chrono = { version = "0.4", features = ["serde"], optional = true }
 serde_with = { version = "2", features = ["chrono"], optional = true }
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros", "rt"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[package.metadata.docs.rs]
+all-features = true

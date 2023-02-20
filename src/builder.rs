@@ -39,14 +39,14 @@ impl<'a> PluginBuilder<'a> {
 
     pub async fn connect(self) -> Result<Plugin, Error> {
         Plugin::connect(PluginDetails {
-            name: self.name.unwrap_or_else(|| "stellwerksim-rs Plugin"),
-            author: self.author.unwrap_or_else(|| "stellwerksim-rs Author"),
+            name: self.name.unwrap_or("stellwerksim-rs Plugin"),
+            author: self.author.unwrap_or("stellwerksim-rs Author"),
             version: self
                 .version
-                .unwrap_or_else(|| concat!("stellwerksim-rs/", env!("CARGO_PKG_VERSION"))),
+                .unwrap_or(concat!("stellwerksim-rs/", env!("CARGO_PKG_VERSION"))),
             description: self
                 .description
-                .unwrap_or_else(|| "A stellwerksim-rs plugin"),
+                .unwrap_or("A stellwerksim-rs plugin"),
             host: self
                 .host
                 .unwrap_or_else(|| "127.0.0.1:3691".parse().unwrap()),

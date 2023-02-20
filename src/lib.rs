@@ -71,7 +71,7 @@ impl Plugin {
         PluginBuilder::default()
     }
 
-    pub(crate) async fn connect<'a>(details: PluginDetails<'a>) -> Result<Self, Error> {
+    pub(crate) async fn connect(details: PluginDetails<'_>) -> Result<Self, Error> {
         let mut stream = BufReader::new(TcpStream::connect(details.host).await?);
         let status = read_message::<Status>(&mut stream).await?;
         assert_eq!(

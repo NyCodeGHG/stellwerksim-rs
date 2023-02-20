@@ -7,3 +7,6 @@ edition = "2021"
 tokio = { version = "1", features = ["net", "io-util"] }
 serde = { version = "1", features = ["derive"] }
 serde-xml-rs = "0.6"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt"] }

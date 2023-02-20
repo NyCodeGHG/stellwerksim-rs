@@ -1,6 +1,5 @@
-use std::{error::Error, net::SocketAddr};
-
-use crate::{Plugin, PluginDetails};
+use std::net::SocketAddr;
+use crate::{Error, Plugin, PluginDetails};
 
 #[derive(Debug, Default)]
 pub struct PluginBuilder {
@@ -37,7 +36,7 @@ impl PluginBuilder {
         self
     }
 
-    pub async fn connect(self) -> Result<Plugin, Box<dyn Error>> {
+    pub async fn connect(self) -> Result<Plugin, Error> {
         Plugin::connect(PluginDetails {
             name: self.name.unwrap_or_else(|| "stellwerksim-rs Plugin".into()),
             author: self
@@ -56,3 +55,5 @@ impl PluginBuilder {
         .await
     }
 }
+
+

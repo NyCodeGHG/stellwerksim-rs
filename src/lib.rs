@@ -1,5 +1,5 @@
 //! # stellwerksim-rs
-//! Rust SDK for writing asynchronous [StellwerkSim](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:schnittstelle) plugins using [tokio](https://crates.io/tokio).
+//! Rust SDK for writing asynchronous [StellwerkSim](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:schnittstelle) plugins using [tokio](https://crates.io/crates/tokio).
 //!
 //! # Implemented Request Types
 //! Note: Not all request types are implemented yet. Feel free to

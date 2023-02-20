@@ -1,11 +1,11 @@
 # stellwerksim-rs
 
-[![Crates.io](https://img.shields.io/crates/v/stellwerksim?style=flat-square)](https://crates.io/stellwerksim)
+[![Crates.io](https://img.shields.io/crates/v/stellwerksim?style=flat-square)](https://crates.io/crates/stellwerksim)
 [![docs.rs](https://img.shields.io/docsrs/stellwerksim?style=flat-square)](https://docs.rs/stellwerksim)
 ![Crates.io](https://img.shields.io/crates/l/stellwerksim?style=flat-square)
 [![CI](https://github.com/NyCodeGHG/stellwerksim-rs/workflows/CI/badge.svg)](https://github.com/NyCodeGHG/stellwerksim-rs/actions?query=workflow%3ACI)
 
-Rust SDK for writing asynchronous [StellwerkSim](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:schnittstelle) plugins using [tokio](https://crates.io/tokio).
+Rust SDK for writing asynchronous [StellwerkSim](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:schnittstelle) plugins using [tokio](https://crates.io/crates/tokio).
 
 ## Versioning
 

@@ -9,5 +9,8 @@ async fn main() {
         .connect()
         .await
         .unwrap();
-    dbg!(plugin);
+    let time = plugin.simulator_time().await.unwrap();
+    println!("{time:?}");
+    let info = plugin.system_info().await.unwrap();
+    println!("{info:#?}");
 }

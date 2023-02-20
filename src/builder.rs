@@ -1,5 +1,5 @@
-use std::net::SocketAddr;
 use crate::{Error, Plugin, PluginDetails};
+use std::net::SocketAddr;
 
 #[derive(Debug, Default)]
 pub struct PluginBuilder {
@@ -55,5 +55,3 @@ impl PluginBuilder {
         .await
     }
 }
-
-

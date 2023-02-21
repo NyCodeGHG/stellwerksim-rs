@@ -4,7 +4,7 @@ use serde::Deserialize;
 #[cfg(feature = "simulator-time")]
 use serde_with::{formats::Strict, serde_as, DeserializeAs, TimestampMilliSeconds};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone, PartialEq, Eq)]
 pub struct Status {
     pub code: i32,
     #[serde(rename = "$value")]
@@ -13,7 +13,7 @@ pub struct Status {
 
 #[cfg(feature = "simulator-time")]
 #[serde_as]
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone, PartialEq, Eq)]
 pub(crate) struct SimulatorTimeResponse {
     #[serde_as(as = "NaiveTimeMilliSeconds")]
     #[serde(rename = "zeit")]
@@ -35,7 +35,7 @@ impl<'de> DeserializeAs<'de, NaiveTime> for NaiveTimeMilliSeconds {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone, PartialEq, Eq)]
 pub struct SystemInfo {
     #[serde(rename = "simbuild")]
     pub build: i32,

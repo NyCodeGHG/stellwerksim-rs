@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/NyCodeGHG/stellwerksim-rs/compare/v0.1.0...v0.1.1) (2023-02-21)
+
+
+### Bug Fixes
+
+* derive Clone, PartialEq and Eq ([27181c5](https://github.com/NyCodeGHG/stellwerksim-rs/commit/27181c5b092afc68dc66993d5f64692d6dfbc51f))
+
 ## 0.1.0 (2023-02-20)
 
 

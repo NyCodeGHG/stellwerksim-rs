@@ -15,4 +15,6 @@ async fn main() {
     println!("{info:#?}");
     let platform_list = plugin.platform_list().await.unwrap();
     println!("{platform_list:#?}");
+    let train_list = plugin.train_list().await.unwrap();
+    println!("{train_list:#?}");
 }

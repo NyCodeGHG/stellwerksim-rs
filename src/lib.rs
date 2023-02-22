@@ -27,7 +27,8 @@
 //! }
 //! ```
 
-use crate::protocol::{Platform, PlatformListResponse, SystemInfo};
+use crate::protocol::{Platform, PlatformListResponse, SystemInfo, Train, TrainListResponse};
+
 use serde::Deserialize;
 use std::net::SocketAddr;
 use thiserror::Error;
@@ -153,6 +154,13 @@ impl Plugin {
             )
             .await?
             .platforms)
+    }
+
+    pub async fn train_list(&self) -> Result<Vec<Train>, Error> {
+        Ok(self
+            .send_request::<TrainListResponse>(b"<zugliste />", Some("</zugliste>\n"))
+            .await?
+            .trains)
     }
 }
 

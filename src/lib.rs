@@ -73,7 +73,7 @@ impl Plugin {
 
     pub(crate) async fn connect(details: PluginDetails<'_>) -> Result<Self, Error> {
         let mut stream = BufReader::new(TcpStream::connect(details.host).await?);
-        let status = read_message::<Status>(&mut stream).await?;
+        let status = read_message::<Status>(&mut stream, None).await?;
         assert_eq!(
             300, status.code,
             "Received an invalid status code from StellwerkSim: {}",
@@ -104,16 +104,21 @@ impl Plugin {
     ) -> Result<Status, Error> {
         self.send_request(
             format!("<register name='{name}' autor='{author}' version='{version}' protokoll='1' text='{description}' />")
-            .as_bytes()
+            .as_bytes(),
+            None
         ).await
     }
 
-    async fn send_request<'a, T: Deserialize<'a>>(&self, message: &[u8]) -> Result<T, Error> {
+    async fn send_request<'a, T: Deserialize<'a>>(
+        &self,
+        message: &[u8],
+        ending_tag: Option<&str>,
+    ) -> Result<T, Error> {
         let mut stream = self.stream.lock().await;
         stream.write_all(message).await?;
         stream.write_u8(b'\n').await?;
         stream.flush().await?;
-        read_message(&mut stream).await
+        read_message(&mut stream, ending_tag).await
     }
 
     /// Retrievies the current in-game time.
@@ -123,21 +128,35 @@ impl Plugin {
         use protocol::SimulatorTimeResponse;
 
         let now = Utc::now();
-        let response: SimulatorTimeResponse = self.send_request(b"<simzeit />").await?;
+        let response: SimulatorTimeResponse = self.send_request(b"<simzeit />", None).await?;
         let elapsed = now.signed_duration_since(Utc::now());
         Ok(response.time - elapsed / 2)
     }
 
     /// Reads information about the current system.
     pub async fn system_info(&self) -> Result<SystemInfo, Error> {
-        self.send_request(b"<anlageninfo />").await
+        self.send_request(b"<anlageninfo />", None).await
     }
 }
 
+// ending_tag is required if the response has more than one line
 async fn read_message<'a, T: Deserialize<'a>>(
     stream: &mut BufReader<TcpStream>,
+    ending_tag: Option<&str>,
 ) -> Result<T, Error> {
     let mut buf = String::new();
-    stream.read_line(&mut buf).await?;
+    if let Some(ending_tag) = ending_tag {
+        loop {
+            let mut loop_buf = String::new();
+            stream.read_line(&mut loop_buf).await?;
+            buf += &loop_buf;
+            if loop_buf == ending_tag {
+                break;
+            }
+        }
+    } else {
+        stream.read_line(&mut buf).await?;
+    }
+
     Ok(serde_xml_rs::from_str(&buf)?)
 }

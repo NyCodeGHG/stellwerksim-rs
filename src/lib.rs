@@ -27,7 +27,7 @@
 //! }
 //! ```
 
-use crate::protocol::SystemInfo;
+use crate::protocol::{Platform, PlatformListResponse, SystemInfo};
 use serde::Deserialize;
 use std::net::SocketAddr;
 use thiserror::Error;
@@ -143,6 +143,16 @@ impl Plugin {
     /// Reads information about the current system.
     pub async fn system_info(&self) -> Result<SystemInfo, Error> {
         self.send_request(b"<anlageninfo />", None).await
+    }
+
+    pub async fn platform_list(&self) -> Result<Vec<Platform>, Error> {
+        Ok(self
+            .send_request::<PlatformListResponse>(
+                b"<bahnsteigliste />",
+                Some("</bahnsteigliste>\n"),
+            )
+            .await?
+            .platforms)
     }
 }
 

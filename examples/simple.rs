@@ -13,4 +13,6 @@ async fn main() {
     println!("{time:?}");
     let info = plugin.system_info().await.unwrap();
     println!("{info:#?}");
+    let platform_list = plugin.platform_list().await.unwrap();
+    println!("{platform_list:#?}");
 }

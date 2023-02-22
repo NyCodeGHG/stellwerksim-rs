@@ -27,4 +27,6 @@ async fn main() {
         .await
         .unwrap();
     println!("{train_timetable:#?}");
+    let ways = plugin.ways().await.unwrap();
+    println!("{ways:#?}");
 }

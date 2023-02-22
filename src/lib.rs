@@ -28,7 +28,7 @@
 //! ```
 
 use crate::protocol::{
-    Platform, PlatformListResponse, SystemInfo, Train, TrainDetails, TrainListResponse,
+    Platform, PlatformListResponse, SystemInfo, Train, TrainDetails, TrainListResponse, Ways,
 };
 
 use serde::Deserialize;
@@ -177,6 +177,10 @@ impl Plugin {
             Some("</zugfahrplan>\n"),
         )
         .await
+    }
+
+    pub async fn ways(&self) -> Result<Ways, Error> {
+        self.send_request(b"<wege />", Some("</wege>\n")).await
     }
 }
 

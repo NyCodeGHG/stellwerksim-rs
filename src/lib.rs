@@ -8,6 +8,12 @@
 //! * [`register`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#register) - Automatically done by [Plugin]'s API.
 //! * [`simzeit`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#simzeit) - See [Plugin::simulator_time].
 //! Requires the `simulator-time` feature flag which is **Enabled by default!**
+//! * [`bahnsteigliste`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#bahnsteigliste) - See [Plugin::platform_list].
+//! * [`zugliste`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugliste) - See [Plugin::train_list].
+//! * [`zugdetails`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugdetails) - See [Plugin::train_details].
+//! * [`zugfahrplan`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugfahrplan) - See [Plugin::train_timetable].
+//! Requires the `timetable` feature flag which is **Enabled by default!**
+//! * [`wege`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#wege) - See [Plugin::ways].
 //!
 //! # Example
 //! Create plugin instance via the [Plugin::builder].
@@ -102,6 +108,7 @@ impl Plugin {
         Ok(plugin)
     }
 
+    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#register)
     async fn register<'a>(
         &self,
         PluginDetails {
@@ -131,7 +138,7 @@ impl Plugin {
         read_message(&mut stream, ending_tag).await
     }
 
-    /// Retrievies the current in-game time.
+    /// Retrievies the current in-game time. [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#simzeit)
     #[cfg(feature = "simulator-time")]
     pub async fn simulator_time(&self) -> Result<chrono::NaiveTime, Error> {
         use chrono::Utc;
@@ -143,11 +150,12 @@ impl Plugin {
         Ok(response.time - elapsed / 2)
     }
 
-    /// Reads information about the current system.
+    /// Reads information about the current system. [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#anlageninfo)
     pub async fn system_info(&self) -> Result<SystemInfo, Error> {
         self.send_request(b"<anlageninfo />", None).await
     }
 
+    /// Gets a full list of platforms. [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#bahnsteigliste)
     pub async fn platform_list(&self) -> Result<Vec<Platform>, Error> {
         Ok(self
             .send_request::<PlatformListResponse>(
@@ -158,6 +166,7 @@ impl Plugin {
             .platforms)
     }
 
+    /// Gets a full list of trains. [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugliste)
     pub async fn train_list(&self) -> Result<Vec<Train>, Error> {
         Ok(self
             .send_request::<TrainListResponse>(b"<zugliste />", Some("</zugliste>\n"))
@@ -165,11 +174,13 @@ impl Plugin {
             .trains)
     }
 
+    /// Gets the train details by a train id [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugdetails)
     pub async fn train_details(&self, zid: &str) -> Result<TrainDetails, Error> {
         self.send_request(format!("<zugdetails zid='{zid}' />").as_bytes(), None)
             .await
     }
 
+    /// Gets the timeable of a train by it's train id [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugfahrplan)
     #[cfg(feature = "timetable")]
     pub async fn train_timetable(&self, zid: &str) -> Result<protocol::TrainTimetable, Error> {
         self.send_request(
@@ -179,6 +190,7 @@ impl Plugin {
         .await
     }
 
+    /// Gets a full list of shapes and connections of the track diagram [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#wege)
     pub async fn ways(&self) -> Result<Ways, Error> {
         self.send_request(b"<wege />", Some("</wege>\n")).await
     }

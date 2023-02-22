@@ -10,8 +10,9 @@ keywords = ["stellwerksim"]
 repository = "https://github.com/NyCodeGHG/stellwerksim-rs"
 
 [features]
-default = ["simulator-time"]
+default = ["simulator-time", "timetable"]
 simulator-time = ["dep:chrono", "dep:serde_with"]
+timetable = ["dep:chrono", "dep:serde_with"]
 
 [dependencies]
 tokio = { version = "1", features = ["net", "io-util", "sync"] }

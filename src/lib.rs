@@ -169,6 +169,15 @@ impl Plugin {
         self.send_request(format!("<zugdetails zid='{zid}' />").as_bytes(), None)
             .await
     }
+
+    #[cfg(feature = "timetable")]
+    pub async fn train_timetable(&self, zid: &str) -> Result<protocol::TrainTimetable, Error> {
+        self.send_request(
+            format!("<zugfahrplan zid='{zid}' />").as_bytes(),
+            Some("</zugfahrplan>\n"),
+        )
+        .await
+    }
 }
 
 // ending_tag is required if the response has more than one line

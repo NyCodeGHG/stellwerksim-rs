@@ -22,4 +22,9 @@ async fn main() {
         .await
         .unwrap();
     println!("{train_details:#?}");
+    let train_timetable = plugin
+        .train_timetable(&train_list.get(0).unwrap().id)
+        .await
+        .unwrap();
+    println!("{train_timetable:#?}");
 }

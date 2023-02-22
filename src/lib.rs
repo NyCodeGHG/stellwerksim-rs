@@ -27,7 +27,9 @@
 //! }
 //! ```
 
-use crate::protocol::{Platform, PlatformListResponse, SystemInfo, Train, TrainListResponse};
+use crate::protocol::{
+    Platform, PlatformListResponse, SystemInfo, Train, TrainDetails, TrainListResponse,
+};
 
 use serde::Deserialize;
 use std::net::SocketAddr;
@@ -161,6 +163,11 @@ impl Plugin {
             .send_request::<TrainListResponse>(b"<zugliste />", Some("</zugliste>\n"))
             .await?
             .trains)
+    }
+
+    pub async fn train_details(&self, zid: &str) -> Result<TrainDetails, Error> {
+        self.send_request(format!("<zugdetails zid='{zid}' />").as_bytes(), None)
+            .await
     }
 }
 

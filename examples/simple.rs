@@ -17,4 +17,9 @@ async fn main() {
     println!("{platform_list:#?}");
     let train_list = plugin.train_list().await.unwrap();
     println!("{train_list:#?}");
+    let train_details = plugin
+        .train_details(&train_list.get(0).unwrap().id)
+        .await
+        .unwrap();
+    println!("{train_details:#?}");
 }

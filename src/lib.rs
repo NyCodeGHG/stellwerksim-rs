@@ -109,7 +109,11 @@ impl Plugin {
         ).await
     }
 
-    async fn send_request<'a, T: Deserialize<'a>>(&self, message: &[u8], ending_tag: Option<&str>) -> Result<T, Error> {
+    async fn send_request<'a, T: Deserialize<'a>>(
+        &self,
+        message: &[u8],
+        ending_tag: Option<&str>,
+    ) -> Result<T, Error> {
         let mut stream = self.stream.lock().await;
         stream.write_all(message).await?;
         stream.write_u8(b'\n').await?;
@@ -138,7 +142,7 @@ impl Plugin {
 // ending_tag is required if the response has more than one line
 async fn read_message<'a, T: Deserialize<'a>>(
     stream: &mut BufReader<TcpStream>,
-    ending_tag: Option<&str>
+    ending_tag: Option<&str>,
 ) -> Result<T, Error> {
     let mut buf = String::new();
     if let Some(ending_tag) = ending_tag {
@@ -147,7 +151,7 @@ async fn read_message<'a, T: Deserialize<'a>>(
             stream.read_line(&mut loop_buf).await?;
             buf += &loop_buf;
             if loop_buf == ending_tag {
-                break
+                break;
             }
         }
     } else {

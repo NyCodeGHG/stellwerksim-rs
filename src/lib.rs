@@ -34,7 +34,8 @@
 //! ```
 
 use crate::protocol::{
-    Platform, PlatformListResponse, SystemInfo, Train, TrainDetails, TrainListResponse, Ways,
+    Platform, PlatformListResponse, Status, SystemInfo, Train, TrainDetails, TrainListResponse,
+    Ways,
 };
 
 use serde::Deserialize;
@@ -72,13 +73,6 @@ pub enum Error {
     Network(#[from] tokio::io::Error),
     #[error("Failed to parse xml: {0}")]
     Xml(#[from] serde_xml_rs::Error),
-}
-
-#[derive(Debug, Deserialize, Clone, PartialEq, Eq)]
-pub struct Status {
-    pub code: i32,
-    #[serde(rename = "$value")]
-    pub text: String,
 }
 
 impl Plugin {

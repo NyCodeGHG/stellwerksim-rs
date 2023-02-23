@@ -2,7 +2,7 @@
 //! Rust SDK for writing asynchronous [StellwerkSim](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:schnittstelle) plugins using [tokio](https://crates.io/crates/tokio).
 //!
 //! # Implemented Request Types
-//! Note: Not all request types are implemented yet. Feel free to
+//! Note: All request types except events are implemented. Feel free to
 //! [contribute](https://github.com/NyCodeGHG/stellwerksim-rs).
 //!
 //! * [`register`](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#register) - Automatically done by [Plugin]'s API.
@@ -108,7 +108,6 @@ impl Plugin {
         Ok(plugin)
     }
 
-    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#register)
     async fn register<'a>(
         &self,
         PluginDetails {
@@ -142,7 +141,7 @@ impl Plugin {
     #[cfg(feature = "simulator-time")]
     pub async fn simulator_time(&self) -> Result<chrono::NaiveTime, Error> {
         use chrono::Utc;
-        use protocol::SimulatorTimeResponse;
+        use protocol::simulator_time::SimulatorTimeResponse;
 
         let now = Utc::now();
         let response: SimulatorTimeResponse = self.send_request(b"<simzeit />", None).await?;
@@ -150,49 +149,52 @@ impl Plugin {
         Ok(response.time - elapsed / 2)
     }
 
-    /// Reads information about the current system. [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#anlageninfo)
+    /// Reads information about the current system.
+    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#anlageninfo)
     pub async fn system_info(&self) -> Result<SystemInfo, Error> {
         self.send_request(b"<anlageninfo />", None).await
     }
 
-    /// Gets a full list of platforms. [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#bahnsteigliste)
+    /// Gets a full list of platforms.
+    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#bahnsteigliste)
     pub async fn platform_list(&self) -> Result<Vec<Platform>, Error> {
         Ok(self
-            .send_request::<PlatformListResponse>(
-                b"<bahnsteigliste />",
-                Some("</bahnsteigliste>\n"),
-            )
+            .send_request::<PlatformListResponse>(b"<bahnsteigliste />", Some("</bahnsteigliste>"))
             .await?
             .platforms)
     }
 
-    /// Gets a full list of trains. [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugliste)
+    /// Gets a full list of trains.
+    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugliste)
     pub async fn train_list(&self) -> Result<Vec<Train>, Error> {
         Ok(self
-            .send_request::<TrainListResponse>(b"<zugliste />", Some("</zugliste>\n"))
+            .send_request::<TrainListResponse>(b"<zugliste />", Some("</zugliste>"))
             .await?
             .trains)
     }
 
-    /// Gets the train details by a train id [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugdetails)
-    pub async fn train_details(&self, zid: &str) -> Result<TrainDetails, Error> {
-        self.send_request(format!("<zugdetails zid='{zid}' />").as_bytes(), None)
+    /// Gets the train details by a train id.
+    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugdetails)
+    pub async fn train_details(&self, train_id: &str) -> Result<TrainDetails, Error> {
+        self.send_request(format!("<zugdetails zid='{train_id}' />").as_bytes(), None)
             .await
     }
 
-    /// Gets the timeable of a train by it's train id [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugfahrplan)
+    /// Gets the timeable of a train by it's train id.
+    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#zugfahrplan)
     #[cfg(feature = "timetable")]
-    pub async fn train_timetable(&self, zid: &str) -> Result<protocol::TrainTimetable, Error> {
+    pub async fn train_timetable(&self, train_id: &str) -> Result<protocol::TrainTimetable, Error> {
         self.send_request(
-            format!("<zugfahrplan zid='{zid}' />").as_bytes(),
-            Some("</zugfahrplan>\n"),
+            format!("<zugfahrplan zid='{train_id}' />").as_bytes(),
+            Some("</zugfahrplan>"),
         )
         .await
     }
 
-    /// Gets a full list of shapes and connections of the track diagram [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#wege)
+    /// Gets a full list of shapes and connections of the track diagram.
+    /// [Official docs](https://doku.stellwerksim.de/doku.php?id=stellwerksim:plugins:spezifikation#wege)
     pub async fn ways(&self) -> Result<Ways, Error> {
-        self.send_request(b"<wege />", Some("</wege>\n")).await
+        self.send_request(b"<wege />", Some("</wege>")).await
     }
 }
 
@@ -207,7 +209,7 @@ async fn read_message<'a, T: Deserialize<'a>>(
             let mut loop_buf = String::new();
             stream.read_line(&mut loop_buf).await?;
             buf += &loop_buf;
-            if loop_buf == ending_tag {
+            if loop_buf.trim() == ending_tag {
                 break;
             }
         }

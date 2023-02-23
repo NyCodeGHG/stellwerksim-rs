@@ -2,7 +2,7 @@ use chrono::NaiveTime;
 use serde::Deserialize;
 use serde_with::serde_as;
 
-use super::serialize::NaiveTimeHoursMinutes;
+use super::serialization::NaiveTimeHoursMinutes;
 
 #[derive(Debug, Deserialize, Clone, PartialEq, Eq)]
 #[serde(rename = "zugfahrplan")]

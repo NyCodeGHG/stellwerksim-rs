@@ -2,7 +2,7 @@ use chrono::NaiveTime;
 use serde::Deserialize;
 use serde_with::serde_as;
 
-use super::serialize::NaiveTimeMilliSeconds;
+use super::serialization::NaiveTimeMilliSeconds;
 
 #[serde_as]
 #[derive(Debug, Deserialize, Clone, PartialEq, Eq)]

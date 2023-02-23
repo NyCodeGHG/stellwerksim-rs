@@ -1,4 +1,4 @@
-mod serialize;
+mod serialization;
 
 mod platform_list;
 #[cfg(feature = "simulator-time")]

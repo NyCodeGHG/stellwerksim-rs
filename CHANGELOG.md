@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/NyCodeGHG/stellwerksim-rs/compare/v0.1.1...v0.2.0) (2023-02-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* do not panic on invalid sts responses
+
+### Bug Fixes
+
+* Allow multiple xml lines by comparing the ending tag ([#3](https://github.com/NyCodeGHG/stellwerksim-rs/issues/3)) ([773bbf9](https://github.com/NyCodeGHG/stellwerksim-rs/commit/773bbf96833e4c76e5f042a35fd07a85cb540099))
+* do not panic on invalid sts responses ([947c2d4](https://github.com/NyCodeGHG/stellwerksim-rs/commit/947c2d43acf76d4fa046765964d321d4b57f9b1f))
+
 ## [0.1.1](https://github.com/NyCodeGHG/stellwerksim-rs/compare/v0.1.0...v0.1.1) (2023-02-21)
 
 

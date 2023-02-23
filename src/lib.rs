@@ -32,6 +32,17 @@
 //!     Ok(())
 //! }
 //! ```
+#![deny(
+    unsafe_code,
+    missing_debug_implementations,
+    trivial_casts,
+    trivial_numeric_casts,
+    unused_import_braces,
+    unused_qualifications,
+    unused_mut,
+    unused_results,
+    unused_lifetimes
+)]
 
 use crate::protocol::{
     Platform, PlatformListResponse, Status, SystemInfo, Train, TrainDetails, TrainListResponse,
@@ -201,14 +212,14 @@ async fn read_message<'a, T: Deserialize<'a>>(
     if let Some(ending_tag) = ending_tag {
         loop {
             let mut loop_buf = String::new();
-            stream.read_line(&mut loop_buf).await?;
+            let _ = stream.read_line(&mut loop_buf).await?;
             buf += &loop_buf;
             if loop_buf.trim() == ending_tag {
                 break;
             }
         }
     } else {
-        stream.read_line(&mut buf).await?;
+        let _ = stream.read_line(&mut buf).await?;
     }
 
     Ok(serde_xml_rs::from_str(&buf)?)

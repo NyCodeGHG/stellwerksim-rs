@@ -84,6 +84,8 @@ pub enum Error {
     Network(#[from] tokio::io::Error),
     #[error("Failed to parse xml: {0}")]
     Xml(#[from] serde_xml_rs::Error),
+    #[error("StellwerkSim returned an invalid status code: {}", .0.code)]
+    InvalidResponse(Status),
 }
 
 impl Plugin {
@@ -95,21 +97,17 @@ impl Plugin {
     pub(crate) async fn connect(details: PluginDetails<'_>) -> Result<Self, Error> {
         let mut stream = BufReader::new(TcpStream::connect(details.host).await?);
         let status = read_message::<Status>(&mut stream, None).await?;
-        assert_eq!(
-            300, status.code,
-            "Received an invalid status code from StellwerkSim: {}",
-            status.code
-        );
+        if status.code != 300 {
+            return Err(Error::InvalidResponse(status));
+        }
 
         let stream = Mutex::new(stream);
         let plugin = Plugin { stream };
         let status = plugin.register(&details).await?;
 
-        assert_eq!(
-            220, status.code,
-            "Received an invalid status code from StellwerkSim: {}",
-            status.code
-        );
+        if status.code != 220 {
+            return Err(Error::InvalidResponse(status));
+        }
         Ok(plugin)
     }
 
